@@ -1,14 +1,12 @@
 import { useState } from 'react';
+import '../styles/Form.css';
 
 function Info({inputs = {}, handleChange}) {
-    //const [name, setName] = useState("");
-    //const [email, setEmail] = useState("");
-    //const [number, setNumber] = useState("");
-
     return (
         <div>
             <div>
                 <label>
+                    Name:
                     <input
                     type="text"
                     name="name"
@@ -19,6 +17,7 @@ function Info({inputs = {}, handleChange}) {
             </div>
             <div>
                 <label>
+                    Email:
                     <input
                     type="text"
                     name="email"
@@ -29,6 +28,7 @@ function Info({inputs = {}, handleChange}) {
             </div>
             <div>
                 <label>
+                    Phone Number:
                     <input
                     type="text"
                     name="number"
@@ -42,14 +42,11 @@ function Info({inputs = {}, handleChange}) {
 }
 
 function Education({inputs  = {}, handleChange}) {
-    //const [name, setName] = useState("");
-    //const [major, setMajor] = useState("");
-    //const [gradDate, setGradDate] = useState("");
-
     return (
         <div>
             <div>
                 <label>
+                    University:
                     <input
                     type="text"
                     name="eduname"
@@ -60,6 +57,7 @@ function Education({inputs  = {}, handleChange}) {
             </div>
             <div>
                 <label>
+                    Major:
                     <input
                     type="text"
                     name="major"
@@ -70,6 +68,7 @@ function Education({inputs  = {}, handleChange}) {
             </div>
             <div>
                 <label>
+                    Graduation Date:
                     <input
                     type="text"
                     name="gradDate"
@@ -83,14 +82,11 @@ function Education({inputs  = {}, handleChange}) {
 }
 
 function Experience({inputs  = {}, handleChange}) {
-    //const [compName, setCompName] = useState("");
-    //const [title, setTitle] = useState("");
-    //const [workDate, setWorkDate] = useState("");
-
     return (
         <div>
             <div>
                 <label>
+                    Company Name:
                     <input
                     type="text"
                     name="compName"
@@ -101,6 +97,7 @@ function Experience({inputs  = {}, handleChange}) {
             </div>
             <div>
                 <label>
+                    Job Title:
                     <input
                     type="text"
                     name="title"
@@ -111,6 +108,7 @@ function Experience({inputs  = {}, handleChange}) {
             </div>
             <div>
                 <label>
+                    Date of Work: 
                     <input
                     type="text"
                     name="workDate"
@@ -123,8 +121,22 @@ function Experience({inputs  = {}, handleChange}) {
     );
 }
 
-export default function Form() {
-    const [inputs, setInputs] = useState({});
+function FormButton({display, edit, buttonName}) {
+    if(display == true) {
+        return(
+            <button onClick={edit} >{buttonName}</button>
+        );
+    }
+    else {
+        return(<></>);
+    }
+}
+
+export default function Form({inputs, setInputs}) {
+
+    const [edit, setEdit] = useState(false);
+    const [submit, setSubmit] = useState(true);
+    const [formView, setFormView] = useState(true);
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -132,19 +144,35 @@ export default function Form() {
         setInputs(values => ({...values, [name]: value}))
     }
 
-    const handleSubmit = (event) => {
+    const submitButton = (event) => {
         event.preventDefault();
-        console.log(inputs);
+        setEdit(true);
+        setSubmit(false);
+        setFormView(false);
     }
 
-    return (
-        <form onSubmit={handleSubmit}>
-        <Info inputs={inputs} handleChange={handleChange} />
-        <Education inputs={inputs} handleChange={handleChange} />
-        <Experience inputs={inputs} handleChange={handleChange} />
-        <button>Edit</button>
-        <button type="submit">Submit</button>
-        </form>
-    );
+    const editButton = (event) => {
+        event.preventDefault();
+        setSubmit(true);
+        setEdit(false);
+        setFormView(true);
+    }
+
+    if(formView == true) {
+        return (
+            <form>
+            <Info inputs={inputs} handleChange={handleChange} />
+            <Education inputs={inputs} handleChange={handleChange} />
+            <Experience inputs={inputs} handleChange={handleChange} />
+            <FormButton display={edit} edit={editButton} buttonName ="Edit" />
+            <FormButton display={submit} edit={submitButton} buttonName="Submit" />
+            </form>
+        );
+    }
+    else {
+        return(
+            <FormButton display={edit} edit={editButton} buttonName ="Edit" />
+        );
+    }
     
 }
